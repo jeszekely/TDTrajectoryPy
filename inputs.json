@@ -1,0 +1,33 @@
+{
+	"FDTDField": {
+		"File": "AgFilmX-3col.txt",	//File containing the FDTD result field, in 3 column format
+		"laser_power": 1.0e10, // Laser power in Watts
+		"laser_focus": 5640.0, // Radius of laser spot in micrometers
+		"meep_a": 100.0, // Meep "a" unit, in nm
+		"meep_res": 20.0 // Meep resolution
+	},
+	"MoleculeParameters": {
+		"ParamFile": "Molecules.json", //File containing molecule data
+		"Molecule": "Cl2" //Selected Molecule
+	},
+	"CalculationParameters": {
+		"Threads": 4,
+		"JStates": 30, // maximum J rotational state to use
+		"UseM": 0, // if not 0, use M states other than M=0
+		"UseOdd": 0, //if not 0, use odd J states
+		"Procs": 4, // number of processors
+		"AllField": 1 // 0 to calc just a few data points, 1 to use whole EM field file
+	},
+	"TrajectoryParameters": {
+		"InitialX": 3.0, 	//Initial molecule position coordinates, in 100's of nm
+		"InitialY": 25.0,
+		"ttotal": 2.0e8,	//Trajector time in fs
+		"tsteps": 1.0e4, 	//Total number of time steps
+		"dt_image_out": 2000 	//interval for image output
+	},
+	"Outputs": {
+		"JBasis": 0, // Output J,K,M for each basis function, (1) prints to screen, (2) prints to file
+		"Couplings": 0, //Output Coupling parameters for various states
+		"EigenVectors": 0 //Print the coefficients og the rotational eigenvectors
+	}
+}

@@ -4,6 +4,7 @@ import numpy as np
 import constants as c
 import math
 import sympy.physics.quantum.cg as WF
+from scipy import interpolate
 
 def kron_delta(A,B):
 	if A == B:
@@ -94,13 +95,7 @@ def RotationalFxn(compparams,molparams):
 		cossquared = np.dot(gs.T,np.dot(cossq,gs))
 		alignment.append(cossquared)
 
-		# print cossq
-		# exit()
+	alignmentfxn = interpolate.interp1d(intensities,alignment)
+	energyfxn    = interpolate.interp1d(intensities,energies)
 
-	# print intensities
-	# print alignment
-	# print energies
-
-# def RotPES(array):
-# 	out = [x for x in array]
-# 	for num in array:
+	return alignmentfxn,energyfxn

@@ -45,6 +45,13 @@ class Array2D:
 		self.Ex = interpolate.interp2d(self.X,self.Y,self.EMFx,kind='cubic')
 		self.Ey = interpolate.interp2d(self.X,self.Y,self.EMFy,kind='cubic')
 
+	def getAlignment(self,fxn,inten=1.0):
+		self.alignment = [[fxn(inten*x) for x in y] for y in self.EMF]
+		self.align = interpolate.interp2d(self.X,self.Y,self.alignment,kind='cubic')
+
+	def getRotationalEnergy(self,fxn,inten=1.0):
+		self.rotenergy = [[fxn(inten*x) for x in y] for y in self.EMF]
+		self.roten = interpolate.interp2d(self.X,self.Y,self.rotenergy,kind='cubic')
 
 class RotPES(Array2D):
 	def __init__(self,filename=None):

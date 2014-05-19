@@ -12,5 +12,6 @@ A = FDTD.Array2D("inputs.json")
 # 	A.loadTextFile("AgFilmX-3col.txt")
 
 A.loadTextFile("AgFilmX-3col.txt")
+
 molParams = IP.ImportJSON(A.params['MoleculeParameters']['ParamFile'])
-RPES.RotationalFxn(A.params,molParams)
+alignFXN,enFXN = RPES.RotationalFxn(A.params,molParams)

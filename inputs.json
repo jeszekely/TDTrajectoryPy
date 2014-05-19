@@ -12,7 +12,7 @@
 	},
 	"CalculationParameters": {
 		"Threads": 4,
-		"JStates": 30, // maximum J rotational state to use
+		"JStates": 50, // maximum J rotational state to use
 		"UseM": 0, // if not 0, use M states other than M=0
 		"UseOdd": 0, //if not 0, use odd J states
 		"Procs": 4, // number of processors
@@ -28,6 +28,6 @@
 	"Outputs": {
 		"JBasis": 0, // Output J,K,M for each basis function, (1) prints to screen, (2) prints to file
 		"Couplings": 0, //Output Coupling parameters for various states
-		"EigenVectors": 0 //Print the coefficients og the rotational eigenvectors
+		"EigenVectors": 0 //Print the coefficients of the rotational eigenvectors
 	}
 }

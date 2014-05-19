@@ -1,5 +1,6 @@
 from __future__ import division
-from scipy import factorial, floor, sqrt
+from scipy import floor, sqrt
+from scipy.misc import factorial
 from numpy import arange
 
 def Wigner3j(j1,j2,j3,m1,m2,m3):
@@ -19,8 +20,11 @@ def Wigner3j(j1,j2,j3,m1,m2,m3):
 # Reference: Wigner 3j-Symbol entry of Eric Weinstein's Mathworld:
 # http://mathworld.wolfram.com/Wigner3j-Symbol.html
 #======================================================================
-
-    # Error checking
+    # print """
+    # * %.2f    %.2f    %.2f    *
+    # * %.2f    %.2f    %.2f    *
+    # """ % (j1,j2,j3,m1,m2,m3)
+    # # Error checking
     if ( ( 2*j1 != floor(2*j1) ) | ( 2*j2 != floor(2*j2) ) | ( 2*j3 != floor(2*j3) ) | ( 2*m1 != floor(2*m1) ) | ( 2*m2 != floor(2*m2) ) | ( 2*m3 != floor(2*m3) ) ):
         print 'All arguments must be integers or half-integers.'
         return -1
@@ -43,19 +47,19 @@ def Wigner3j(j1,j2,j3,m1,m2,m3):
         return 0
 
     if ( j3 > j1 + j2)  | ( j3 < abs(j1 - j2) ):
-        print 'j3 is out of bounds.'
+        #print 'j3 is out of bounds.'
         return 0
 
     if abs(m1) > j1:
-        print 'm1 is out of bounds.'
+        #print 'm1 is out of bounds.'
         return 0
 
     if abs(m2) > j2:
-        print 'm2 is out of bounds.'
+        #print 'm2 is out of bounds.'
         return 0
 
     if abs(m3) > j3:
-        print 'm3 is out of bounds.'
+        #print 'm3 is out of bounds.'
         return 0
 
     t1 = j2 - m1 - j3

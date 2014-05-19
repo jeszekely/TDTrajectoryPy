@@ -2,8 +2,10 @@
 
 import numpy as np
 import Inputs as IP
+from scipy import interpolate
+import constants as c
 
-class FDTDArray:
+class Array2D:
 	#Default values that will change later
 	def __init__(self,filename=None):
 		if filename is not None:
@@ -25,6 +27,9 @@ class FDTDArray:
 
 		self.EMF = np.genfromtxt(filename, usecols=(2), dtype=float).reshape(self.ny,self.nx)
 
+		#Interpolate the field and get the gradient
+		self.E = interpolate.interp2d(self.X,self.Y,self.EMF,kind='cubic')
+
 	def setParameters(self,filename):
 		self.params = IP.ImportJSON(filename)
 		try:
@@ -34,3 +39,13 @@ class FDTDArray:
 			print "Error importing resolution and aval from json file"
 			self.aval       = 100.0
 			self.resolution = 20.0
+
+	def getGradients(self):
+		self.EMFy, self.EMFx = np.gradient(self.EMF,self.aval/self.resolution/c.LEN,self.aval/self.resolution/c.LEN)
+		self.Ex = interpolate.interp2d(self.X,self.Y,self.EMFx,kind='cubic')
+		self.Ey = interpolate.interp2d(self.X,self.Y,self.EMFy,kind='cubic')
+
+
+class RotPES(Array2D):
+	def __init__(self,filename=None):
+		Array2D.__init__(self,filename)

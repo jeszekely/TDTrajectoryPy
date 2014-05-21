@@ -10,13 +10,14 @@ class Array2D:
 	def __init__(self,filename=None):
 		if filename is not None:
 			self.setParameters(filename)
+			self.filename = filename
 		else:
 			self.aval = 100.0 #nm
 			self.res  = 20.0 #resolution
 
 	def loadTextFile(self,filename):
-		self.X = np.genfromtxt(filename, usecols=(0), dtype=int)
-		self.Y = np.genfromtxt(filename, usecols=(1), dtype=int)
+		self.X  = np.genfromtxt(filename, usecols=(0), dtype=int)
+		self.Y  = np.genfromtxt(filename, usecols=(1), dtype=int)
 		#Add one to account for indexing starting at zero
 		self.nx = max(self.X)+1
 		self.ny = max(self.Y)+1
@@ -25,20 +26,25 @@ class Array2D:
 		self.X = np.linspace(0.0,float(self.nx-1),self.nx)
 		self.Y = np.linspace(0.0,float(self.ny-1),self.ny)
 
-		self.EMF = np.genfromtxt(filename, usecols=(2), dtype=float).reshape(self.ny,self.nx)
+		self.EMF      = np.genfromtxt(filename, usecols=(2), dtype=float).reshape(self.ny,self.nx)
+		self.filename = filename
 
-		#Interpolate the field and get the gradient
-		self.E = interpolate.interp2d(self.X,self.Y,self.EMF,kind='cubic')
+		self.X /= self.res
+		self.Y /= self.res
 
 	def setParameters(self,filename):
 		self.params = IP.ImportJSON(filename)
+		self.molparams = IP.ImportJSON(self.params['MoleculeParameters']['ParamFile'])
 		try:
-			self.resolution = self.params['FDTDField']['meep_res']
-			self.aval       = self.params['FDTDField']['meep_a']
+			self.res  = self.params['FDTDField']['meep_res']
+			self.aval = self.params['FDTDField']['meep_a']
 		except:
 			print "Error importing resolution and aval from json file"
-			self.aval       = 100.0
-			self.resolution = 20.0
+			self.aval = 100.0
+			self.res  = 20.0
+
+	def interpolateEMF(self):
+		self.E = interpolate.interp2d(self.X,self.Y,self.EMF,kind='cubic')
 
 	def getGradients(self):
 		self.EMFy, self.EMFx = np.gradient(self.EMF,self.aval/self.resolution/c.LEN,self.aval/self.resolution/c.LEN)
@@ -49,9 +55,18 @@ class Array2D:
 		self.alignment = [[fxn(inten*x) for x in y] for y in self.EMF]
 		self.align = interpolate.interp2d(self.X,self.Y,self.alignment,kind='cubic')
 
-	def getRotationalEnergy(self,fxn,inten=1.0):
+	def getRotationalEnergy(self,fxn):
+		try:
+			inten = self.params['FDTDField']['laser_power']
+		except:
+			inten = 1.0e10
 		self.rotenergy = [[fxn(inten*x) for x in y] for y in self.EMF]
-		self.roten = interpolate.interp2d(self.X,self.Y,self.rotenergy,kind='cubic')
+		self.roten     = interpolate.interp2d(self.X,self.Y,self.rotenergy,kind='cubic')
+
+	def transpose(self):
+		self.X,self.Y = self.Y,self.X
+		self.nx,self.ny = self.ny,self.nx
+		self.EMF.reshape(self.ny,self.nx)
 
 class RotPES(Array2D):
 	def __init__(self,filename=None):

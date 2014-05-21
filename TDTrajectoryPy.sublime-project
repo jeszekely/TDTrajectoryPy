@@ -1,0 +1,14 @@
+{
+	"folders":
+	[
+		{
+			"path": "/Users/joshuaszekely/Desktop/Codes/TDTrajectoryPy/",
+			"folder_exclude_patterns": ["pyc","png"],
+			"follow_symlinks":false
+		}
+	],
+	"settings":
+	{
+		"tab_size": 4
+	}
+}
